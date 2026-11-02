@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>California Move — Board &amp; CROS LA Prospects</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #f4f5f3; color: #1c1e1c; line-height: 1.45; font-size: 15px; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 14px 40px; }
+  header.top { background: #22301f; color: #f2f4ee; padding: 22px 0 18px; margin-bottom: 18px; }
+  header.top .wrap { padding-bottom: 0; }
+  h1 { font-size: 26px; margin: 0 0 6px; letter-spacing: .2px; }
+  .tagline { margin: 0 0 14px; color: #cfd8c8; font-size: 14.5px; }
+  .counts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .count { background: #2e4229; border: 1px solid #47603f; border-radius: 10px; padding: 8px 12px; min-width: 104px; }
+  .count b { display: block; font-size: 20px; line-height: 1.1; }
+  .count span { font-size: 12px; color: #c3cfba; text-transform: uppercase; letter-spacing: .4px; }
+  section { background: #fff; border: 1px solid #dde0d8; border-radius: 12px; padding: 16px 16px 10px; margin-bottom: 16px; }
+  h2 { font-size: 19px; margin: 2px 0 10px; }
+  h2 .sub { font-size: 13px; font-weight: 400; color: #5c665c; }
+  h3 { font-size: 15.5px; margin: 14px 0 6px; }
+  p { margin: 6px 0 10px; }
+  .muted { color: #5c665c; font-size: 13.5px; }
+  #map { height: 430px; border-radius: 10px; border: 1px solid #ccd2c6; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; font-size: 13px; }
+  .legend i { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 5px; border: 1px solid rgba(0,0,0,.25); vertical-align: -1px; }
+  details.group { border: 1px solid #e2e5dd; border-radius: 10px; margin: 0 0 10px; overflow: hidden; }
+  details.group > summary { cursor: pointer; padding: 11px 13px; font-weight: 600; font-size: 15.5px; background: #eef1ea; list-style: none; }
+  details.group > summary::-webkit-details-marker { display: none; }
+  details.group > summary .n { color: #5c665c; font-weight: 400; font-size: 13.5px; }
+  .rows { padding: 4px 13px 10px; }
+  .row { padding: 9px 0; border-bottom: 1px solid #eef0ea; }
+  .row:last-child { border-bottom: none; }
+  .row .t { font-weight: 600; }
+  .row .meta { color: #43503f; font-size: 13.5px; }
+  .row .status { font-size: 13.5px; margin-top: 2px; }
+  .row a { color: #2f5d8a; }
+  .pill { display: inline-block; font-size: 11.5px; font-weight: 600; padding: 1px 8px; border-radius: 999px; background: #e8ebf2; color: #37415e; vertical-align: 1px; }
+  .pill.sent { background: #e3efe0; color: #2c5427; }
+  .pill.closed { background: #f0e4e0; color: #71392a; }
+  .pill.flag { background: #f7ecd2; color: #6d5510; }
+  .card { border: 1px solid #e2e5dd; border-radius: 10px; padding: 11px 13px; margin: 0 0 10px; background: #fcfcf9; }
+  .card .t { font-weight: 600; font-size: 15px; }
+  .grid { display: grid; gap: 10px; }
+  @media (min-width: 700px) { .grid.two { grid-template-columns: 1fr 1fr; } .grid.three { grid-template-columns: 1fr 1fr 1fr; } }
+  ul.tight { margin: 6px 0 10px; padding-left: 18px; }
+  ul.tight li { margin-bottom: 5px; }
+  .warn { background: #fdf6e0; border: 1px solid #e8d48a; border-radius: 10px; padding: 10px 13px; margin: 10px 0; font-size: 14px; }
+  .prospect { border: 1px solid #e2e5dd; border-radius: 10px; padding: 10px 13px; margin: 0 0 9px; background: #fcfcf9; }
+  .prospect .t { font-weight: 600; font-size: 15px; }
+  .prospect .loc { color: #5c665c; font-size: 13px; font-weight: 400; }
+  .prospect .desc { font-size: 14px; margin: 3px 0 6px; }
+  .prospect .door { font-size: 13.5px; margin: 2px 0; word-break: break-word; }
+  .prospect .door b { color: #43503f; }
+  .prospect .src { color: #6a7468; font-size: 12.5px; }
+  .prospect .crm { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 7px; padding-top: 7px; border-top: 1px dashed #dde0d8; font-size: 13px; }
+  .prospect .flag-note { font-size: 13px; color: #6d5510; margin-top: 4px; }
+  .progress-strip { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 14px; }
+  .progress-strip .count { background: #eef1ea; border-color: #d4dacb; }
+  .progress-strip .count span { color: #5c665c; }
+  footer { color: #6a7468; font-size: 13px; text-align: center; padding: 6px 0 4px; }
+  @media (max-width: 480px) { #map { height: 320px; } h1 { font-size: 23px; } section { padding: 13px 12px 8px; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <h1>California Move</h1>
+    <p class="tagline">A two-month solo beachhead in January–February 2027 — work, income, and the Los Angeles launch of the film <i>His Name Is Michael</i> — with the permanent-move decision after the LA run proves out.</p>
+    <div class="counts">
+      <div class="count"><b>39</b><span>Applications tracked</span></div>
+      <div class="count"><b>7</b><span>Housing leads</span></div>
+      <div class="count"><b>52</b><span>CROS LA prospects</span></div>
+      <div class="count"><b>35</b><span>Map pins</span></div>
+    </div>
+  </div>
+</header>
+<div class="wrap">
+
+<section>
+  <h2>The shape of it</h2>
+  <p>Jeromy Darling (single father of four, New Prague MN) is testing a California restart: arrive solo in early January 2027 for ~2 months (Jan–Feb), work and build income while preparing the Los Angeles launch of his Catholic feature film <i>His Name Is Michael</i>. February is the film's LA moment: premiere at Laemmle Royal (West LA) Thu Feb 18, 2027, then a booked run week at Lumiere Cinema, Feb 19–25, 2027 — 21 shows at 1pm / 4pm / 7pm. If the LA launch proves out (Leg 1 target: 50,000 admissions across the LA Archdiocese), the permanent-move decision follows. Kids and shared custody stay anchored in Minnesota during the beachhead.</p>
+</section>
+
+<section>
+  <h2>Map <span class="sub">— jobs, housing, and the film</span></h2>
+  <div id="map"></div>
+  <div class="legend">
+    <span><i style="background:#7b5ea7"></i>Housing</span>
+    <span><i style="background:#c0392b"></i>Film</span>
+    <span><i style="background:#2e7d32"></i>Anchor jobs</span>
+    <span><i style="background:#e07b26"></i>Training &amp; fitness</span>
+    <span><i style="background:#0f766e"></i>Martial arts</span>
+  </div>
+</section>
+
+<section>
+  <h2>Applications board</h2>
+
+  <details class="group" open>
+    <summary>Anchor &amp; salaried <span class="n">(15)</span></summary>
+    <div class="rows">
+      <div class="row"><div class="t">Point Foundation — Sr. Director, Technology &amp; Systems</div><div class="meta">$165–190K + bonus · Remote (greater LA)</div><div class="status"><span class="pill sent">Submitted Nov 1</span></div></div>
+      <div class="row"><div class="t">TGR Foundation — Sr. Director, Development, SoCal</div><div class="meta">$150–165K · Irvine</div><div class="status"><span class="pill sent">Sent Nov 1</span> to Jessie Beigel</div></div>
+      <div class="row"><div class="t">WelbeHealth — AI Business Automation Project Manager</div><div class="meta">$109–144K · Remote CA</div><div class="status"><span class="pill sent">Submitted Nov 1</span></div></div>
+      <div class="row"><div class="t">Code for America — Program Director</div><div class="meta">$121,869–$149,188 · Remote US</div><div class="status"><span class="pill sent">Submitted Nov 1</span> via Greenhouse</div></div>
+      <div class="row"><div class="t">Digital Promise — Director, EdTech R&amp;D</div><div class="meta">$145,640–$163,845 CA band · Remote</div><div class="status"><span class="pill sent">Submitted Nov 1</span> via Rippling (no salary field on the live form)</div></div>
+      <div class="row"><div class="t">Inner Spark Learning Lab (STEM to the Future) — Director of Development</div><div class="meta">$110,000–$115,000 · Los Angeles</div><div class="status"><span class="pill sent">Submitted Nov 1</span> via Rippling</div></div>
+      <div class="row"><div class="t">Archdiocese of Los Angeles — Managing Director, High School Emerging Leader Formation</div><div class="meta">$122,329–$155,969 · Wilshire Blvd</div><div class="status"><span class="pill sent">Submitted Nov 1</span> (Req XQC-485)</div></div>
+      <div class="row"><div class="t">Thomas Aquinas College — Director of Annual Giving</div><div class="meta">$90–115K · Santa Paula</div><div class="status"><span class="pill sent">Sent Nov 1</span></div></div>
+      <div class="row"><div class="t">Catholic Leadership Institute — Mission Catalyst, SoCal</div><div class="meta">$95–110K · Remote SoCal + travel</div><div class="status"><span class="pill sent">Submitted Nov 1</span></div></div>
+      <div class="row"><div class="t">Our Lady Queen of Angels — Director of Communications &amp; Digital Media + Director of Youth &amp; Young Adult Faith Formation (combined application)</div><div class="meta">$75–90K each · Newport Beach</div><div class="status"><span class="pill sent">Sent Nov 1</span></div></div>
+      <div class="row"><div class="t">St. Catherine's Academy, Anaheim — Development Director</div><div class="meta">$80,000–$110,000 · Anaheim</div><div class="status"><span class="pill sent">Submitted Nov 1</span> (letter + résumé to finance@stcatherinesacademy.org)</div></div>
+      <div class="row"><div class="t">GIVEN Institute — Director of Advancement</div><div class="meta">Salary unposted · Remote</div><div class="status"><span class="pill sent">Submitted Nov 1</span></div></div>
+      <div class="row"><div class="t">Archdiocese of Los Angeles — Regional Coordinator, Office of Religious Education (Santa Barbara region)</div><div class="meta">$70–81K · LA / Santa Barbara</div><div class="status"><span class="pill sent">Submitted Nov 1</span> (Req XQC-451)</div></div>
+      <div class="row"><div class="t">Orange Catholic Foundation — Relationship Manager</div><div class="meta">$75–90K · Garden Grove</div><div class="status"><span class="pill sent">Submitted Nov 1</span> (Req #281) + cover letter emailed direct</div></div>
+      <div class="row"><div class="t">Dana Point (Diocese of Orange) — Faith Formation Programs Coordinator</div><div class="meta">$22–26/hr FT · Dana Point</div><div class="status"><span class="pill sent">Submitted Nov 1</span></div></div>
+    </div>
+  </details>
+
+  <details class="group" open>
+    <summary>Training &amp; fitness <span class="n">(12)</span></summary>
+    <div class="rows">
+      <div class="row"><div class="t">STARK — Coach / Personal Trainer</div><div class="meta">$50–140K FT · Tustin</div><div class="status"><span class="pill sent">Submitted Nov 1</span></div></div>
+      <div class="row"><div class="t">Alloy Personal Training — Personal Trainer PT</div><div class="meta">$30–38/hr · Irvine</div><div class="status"><span class="pill sent">Submitted Nov 1</span></div></div>
+      <div class="row"><div class="t">StretchLab — Flexologist PT</div><div class="meta">$16.90–26/hr · San Clemente</div><div class="status"><span class="pill sent">Submitted Nov 1</span></div></div>
+      <div class="row"><div class="t">Special Strong — Adaptive trainer</div><div class="meta">~$28–45/hr PT · Anaheim</div><div class="status"><span class="pill sent">Submitted Nov 1</span></div></div>
+      <div class="row"><div class="t">Train With Dave — Evening PT</div><div class="meta">$25–100/session · Orange</div><div class="status"><span class="pill">Letter sent Nov 1</span> awaiting reply</div></div>
+      <div class="row"><div class="t">OC Performance Coaches — Rental / floor arrangement</div><div class="meta">$20/hr floor or $1,000/mo · Laguna Hills</div><div class="status"><span class="pill">Fit call Tue Nov 3, 2:30pm PT</span> (FaceTime)</div></div>
+      <div class="row"><div class="t">PLATEFIT — Power Plate instructor inquiry</div><div class="meta">LA studios</div><div class="status"><span class="pill">Sent Nov 1</span></div></div>
+      <div class="row"><div class="t">Life Time — ARORA / PT route via DPT Lead Edwin Sifuentes</div><div class="meta">Irvine</div><div class="status"><span class="pill">Note forwarded Nov 1</span> awaiting reply</div></div>
+      <div class="row"><div class="t">EōS Fitness — Certified Personal Trainer PT</div><div class="meta">Base $16.90–17.87/hr + session rates $17.50–$55 by level · Montclair (~5 min from The Paseos)</div><div class="status"><span class="pill sent">Submitted Nov 2</span> via Greenhouse; ISSA on EōS approved list · <a href="https://job-boards.greenhouse.io/eosfitness/jobs/4061702009">Posting</a></div></div>
+      <div class="row"><div class="t">24 Hour Fitness — Personal Trainer PT</div><div class="meta">$16.90–$75/hr range · Upland (~13 min from The Paseos)</div><div class="status"><span class="pill sent">Submitted Nov 2</span> via ADP (req 5001232937206), under review · <a href="https://careers.24hourfitness.com/upland-ca/personal-trainer/0524C5F00EFF4A3B94165B00586A5026/job/">Posting</a></div></div>
+      <div class="row"><div class="t">EōS Fitness — Certified Personal Trainer PT</div><div class="meta">Same ladder as Montclair · Rancho Cucamonga (~18 min from The Paseos)</div><div class="status"><span class="pill sent">Submitted Nov 2</span> via Greenhouse · <a href="https://job-boards.greenhouse.io/eosfitness/jobs/4063468009">Posting</a></div></div>
+      <div class="row"><div class="t">Svetness — In-home PT contractor</div><div class="meta">$25–45/session · Inland Empire</div><div class="status"><span class="pill">Already a Svetness trainer (since Jul 2026)</span> reach-out sent Nov 2 to customerservice@svetness.com re: Montclair-area demand + service area, reply pending · <a href="https://job-boards.greenhouse.io/svetness/jobs/4717571007">Posting</a></div></div>
+    </div>
+  </details>
+
+  <details class="group" open>
+    <summary>Martial arts <span class="n">(6)</span></summary>
+    <div class="rows">
+      <div class="row"><div class="t">TumbleKick Studios — Children's TKD Instructor PT</div><div class="meta">$22–30/hr · Studio City</div><div class="status"><span class="pill sent">Emailed Nov 1</span></div></div>
+      <div class="row"><div class="t">Beyond Karate — Martial Arts / Fitness Instructor PT</div><div class="meta">$20–25/hr · Santa Monica</div><div class="status"><span class="pill sent">Emailed Nov 1</span></div></div>
+      <div class="row"><div class="t">Champions Martial Arts — TKD Sparring Coach PT</div><div class="meta">$50–100/hr · Chino Hills</div><div class="status"><span class="pill">Applying</span></div></div>
+      <div class="row"><div class="t">Impact Kids — Martial Arts Instructor</div><div class="meta">$40–75/hr · Chino / Inland Empire</div><div class="status"><span class="pill">Applying</span></div></div>
+      <div class="row"><div class="t">UFC Gym — MMA Coach</div><div class="meta">$16.50–45/hr · Brea + City of Industry</div><div class="status"><span class="pill">Applying</span></div></div>
+      <div class="row"><div class="t">MiraCosta College — PT Martial Arts / Self-Defense Faculty Pool 2026–27</div><div class="meta">$93–114/hr · Oceanside</div><div class="status"><span class="pill closed">Dropped Nov 1</span> (skipped at his call; portal application left saved-unsubmitted)</div></div>
+    </div>
+  </details>
+
+  <details class="group" open>
+    <summary>Closed / not pursued <span class="n">(6)</span></summary>
+    <div class="rows">
+      <div class="row"><div class="t">LMU — Director, Center for Religion &amp; Spirituality</div><div class="status"><span class="pill closed">Posting dead</span> (verified Nov 1)</div></div>
+      <div class="row"><div class="t">St. Martin de Porres (Yorba Linda) — Children's FF Coordinator</div><div class="status"><span class="pill closed">Posting gone</span> (verified Nov 1)</div></div>
+      <div class="row"><div class="t">Orangewood Foundation — CDO</div><div class="status"><span class="pill closed">Dropped at his direction</span></div></div>
+      <div class="row"><div class="t">Fulfillment Fund — VP Development</div><div class="status"><span class="pill closed">Skipped at his direction</span></div></div>
+      <div class="row"><div class="t">GHJ — AI Change Management Lead ($110–140/hr interim)</div><div class="status"><span class="pill closed">Portal blocked the submission</span> — his to file from his own browser</div></div>
+      <div class="row"><div class="t">UFC Gym — BJJ Coach</div><div class="status"><span class="pill closed">Ineligible</span> (requires purple belt + lineage; he holds no BJJ belt)</div></div>
+    </div>
+  </details>
+</section>
+
+<section>
+  <h2>Housing <span class="sub">— January base options</span></h2>
+  <div class="grid two">
+    <div class="card"><div class="t">Prince of Peace Abbey — Oceanside</div><p>Benedictine guest house — $30/night incl. meals (~$900/mo worst case); extended stays welcome. <b>His pick ("ideal")</b>; inquiry drafted, his to place by phone/mail. 85 mi south of LA — pairs with the SOUTH/OC training ground, not with LA film weeks.</p></div>
+    <div class="card"><div class="t">Holy Spirit Retreat Center — Encino</div><p>Sisters of Social Service — ~14 mi from West LA, closest to the film. Long-stay ask is director-level; contact Tita Marcos, 818-285-3370. Ask pending his go.</p></div>
+    <div class="card"><div class="t">Mater Dolorosa — Sierra Madre</div><p>~30 mi from West LA — private retreats $160/night incl. meals at rack rate; a monthly/work arrangement is a negotiation (Nancy Boldt). Ask in November.</p></div>
+    <div class="card"><div class="t">Serra Retreat — Malibu</div><p>Franciscan friars — 30-day stay ask drafted, not yet sent (his decision pending).</p></div>
+    <div class="card"><div class="t">Poverello of Assisi — San Fernando</div><p>Franciscan sisters — 30-day ask drafted; Facebook message approved, but his Messenger send is the working route.</p></div>
+    <div class="card"><div class="t">Furnished rooms (Furnished Finder market)</div><p>OC rooms w/ private bath $1,200–1,800/mo; LA rooms $900–1,800/mo; whole units: Burbank/NoHo/Glendale ADUs $1,995–3,000/mo; Irvine 1BR $3,000–4,100/mo. Two-month housing budget: low tier $2,200–3,600 total; mid tier $4,000–6,200.</p></div>
+  </div>
+  <div class="warn"><b>Apartment Life — Events &amp; Ministry Coordinator (Onsite), Montclair — FLAGGED lead.</b> Unpaid, 12 hrs/wk, in exchange for discounted rent (published 50–75% off; Josh's Aug benchmark: 50% off a 2BR). Property almost certainly The Paseos at Montclair North, 4914 Olive St (2BR $2,680–3,580/mo). <b>Flags:</b> requires a team of 2 in one unit; 2-year commitment + $750 deposit; the Handbook requires Statement of Faith adherence + active membership in an evangelical Christian church (a Catholic parish does not satisfy it as written). He emailed Josh Jackaway himself asking if the Montclair seat is still available — reply pending.</div>
+  <p class="muted">Standing extra: climate-controlled storage ~$150–250/mo (needed either way).</p>
+</section>
+
+<section>
+  <h2>Timeline <span class="sub">— Nov 2026 → Feb 2027</span></h2>
+  <ul class="tight">
+    <li><b>Mon Nov 2, 2026:</b> Catholic Order of Foresters decision call, 2:00pm CT (fiscal sponsorship — the grant engine's gate).</li>
+    <li><b>Tue Nov 3, 2026:</b> OC Performance Coaches fit call, 2:30pm PT (FaceTime).</li>
+    <li><b>November:</b> housing asks out (abbey/retreat houses); anchor-job interviews; VIRTUS renewal + bishop's letter (Fr. Howe channel) progress.</li>
+    <li><b>December:</b> Lumiere run-week invoice paid in full (the December money gate); no venue signatures until December money exists.</li>
+    <li><b>Early January 2027:</b> arrive solo; settle the January base; training + instructing schedules start; anchor interviews in person.</li>
+    <li><b>January working weeks (shape):</b> mornings — personal-training clients; late afternoons/evenings — martial-arts classes; weekdays — parish/film relationship work and interviews; Sundays — parish life.</li>
+    <li><b>Thu Feb 18, 2027:</b> world-launch premiere night, Laemmle Royal, West LA.</li>
+    <li><b>Feb 19–25, 2027:</b> Lumiere Cinema run week — 21 shows, 1pm / 4pm / 7pm daily. (Base shifts to the LA cluster for this stretch.)</li>
+    <li><b>After Feb 25:</b> the decision point — stay and build the permanent move, or return and run the tour from Minnesota.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Money tally <span class="sub">— ranges/estimates from the plan</span></h2>
+  <h3>Income streams — monthly run-rate once ramped (Jan–Feb beachhead)</h3>
+  <ul class="tight">
+    <li><b>Personal training (gyms + stretch):</b> $1,500–2,500/mo at 10–15 hrs/wk</li>
+    <li><b>Martial-arts instructing:</b> $600–2,000/mo at 6–10 hrs/wk ($25–100/hr depending on role)</li>
+    <li><b>Anchor job (Point / TGR / WelbeHealth / etc.):</b> not counted in beachhead burn math — interviews land in January; a salary changes everything downstream</li>
+    <li><b>Guitar sales</b> (Artifact Electrics, 15% commission on $3,995+ instruments): variable upside, not budgeted</li>
+    <li><b>Film:</b> the February LA run is the restart event (Leg 1 target 50,000 admissions; his scenario: netting ~10% of that audience's value restarts his life) — shown as the prize, not as budget income</li>
+  </ul>
+  <h3>Two-month beachhead costs</h3>
+  <ul class="tight">
+    <li><b>Housing:</b> low tier $2,200–3,600 total · mid tier $4,000–6,200 total (Prince of Peace at $30/night ≈ $1,800 for 60 nights incl. meals is the floor case)</li>
+    <li><b>Storage (climate-controlled):</b> $150–250/mo</li>
+    <li><b>Gas:</b> per the drive scenarios ($175 tight / $225 split / $550 scattered per month)</li>
+    <li><b>Food:</b> ~$600/mo (lower if a retreat house includes meals)</li>
+  </ul>
+  <p><b>Bottom line from the plan:</b> training + instructing income roughly covers low-tier housing + food; the beachhead's real product is in-person interviews + the film launch at near-zero burn.</p>
+</section>
+
+<section>
+  <h2>Drive discipline <span class="sub">— live in ONE cluster per phase</span></h2>
+  <p><b>The rule:</b> live in one cluster per phase; take jobs inside that cluster; cross-cluster trips are scheduled exceptions, not commutes.</p>
+  <div class="grid three">
+    <div class="card"><div class="t">Orange County cluster</div><p>Irvine, Newport Beach, Garden Grove, Orange, Tustin, Anaheim, Brea, Laguna Hills, Dana Point, San Clemente, Chino Hills/Chino (edge), Yorba Linda.</p></div>
+    <div class="card"><div class="t">Los Angeles cluster</div><p>West LA, Studio City, Santa Monica, Encino, San Fernando, Sierra Madre, Torrance, City of Industry.</p></div>
+    <div class="card"><div class="t">South cluster</div><p>Oceanside, Chula Vista.</p></div>
+  </div>
+  <h3>Key distances (highway miles / typical drive time)</h3>
+  <p class="muted">Irvine→Chino Hills 28 mi / 40–60 min · Irvine→Brea 20 / 30–45 · Irvine→City of Industry 32 / 45–75 · Irvine→West LA 55 / 75–120 · Irvine→Studio City 62 / 90–130 · Irvine→Oceanside 48 / 50–70 · Oceanside→West LA 88 / 100–150 · Encino→West LA 16 / 30–50 · Encino→Studio City 9 / 20–30 · Encino→San Fernando 12 / 20–30 · Encino→Irvine 72 / 90–140 · San Fernando→Studio City 10 / 20–30</p>
+  <h3>Gas math (estimates)</h3>
+  <ul class="tight">
+    <li>CA regular ≈ $4.75/gal; his van ≈ 19 mpg → ≈ $0.25/mile.</li>
+    <li><b>Tight OC month:</b> ~700 mi → ~$175 gas, ~18 hrs driving.</li>
+    <li><b>Split-base plan</b> (OC in Jan, LA base mid-to-late Feb): ~900 mi/mo → ~$225, ~24 hrs.</li>
+    <li><b>Scattered month</b> (living in Oceanside while working LA jobs): ~2,200 mi → ~$550 and 45+ hrs in the car. <b>THE foot-shooting scenario — the board exists to prevent it.</b></li>
+  </ul>
+  <p><b>Recommended shape already in the plan:</b> January base in/near OC (training + parish stack is OC-dense); shift to an LA-cluster base (Encino area) for the film weeks in February.</p>
+</section>
+
+<section>
+  <h2>CROS LA Prospects <span class="sub">— CRM</span></h2>
+  <p>Prospects for four CROS federation apps, researched Nov 2, 2026. Research only — nobody has been contacted yet. Each prospect's door was hunted in order: the organization's own website (read fully), its Facebook About/Contact info, its Instagram, then Google. The door source is noted on every entry.</p>
+  <div class="progress-strip">
+    <div class="count"><b>52</b><span>Total prospects</span></div>
+    <div class="count"><b>52</b><span>Not contacted</span></div>
+    <div class="count"><b>15</b><span>Verto</span></div>
+    <div class="count"><b>12</b><span>Culina</span></div>
+    <div class="count"><b>14</b><span>ThriftOS</span></div>
+    <div class="count"><b>11</b><span>Resurrectio</span></div>
+  </div>
+  <p class="muted">Status summary: Not contacted — 52 · Contacted — 0 · Replied — 0. Status and next-step fields update from the shared data files as outreach proceeds.</p>
+  <div id="crm"></div>
+</section>
+
+<footer>Working copy — updated from the shared data files.</footer>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+/* ---------- Map ---------- */
+var COLORS = { housing:"#7b5ea7", film:"#c0392b", anchor:"#2e7d32", training:"#e07b26", martial:"#0f766e" };
+var PINS = [
+  // Housing
+  ["Prince of Peace Abbey","housing",33.19,-117.38,"Benedictine guest house, Oceanside — $30/night incl. meals; his pick"],
+  ["Holy Spirit Retreat Center","housing",34.16,-118.51,"Encino — ~14 mi from West LA, closest to the film"],
+  ["Mater Dolorosa","housing",34.16,-118.05,"Sierra Madre — retreat center, ~30 mi from West LA"],
+  ["Serra Retreat","housing",34.03,-118.75,"Malibu — Franciscan friars; 30-day ask drafted"],
+  ["Poverello of Assisi","housing",34.28,-118.44,"San Fernando — Franciscan sisters; 30-day ask drafted"],
+  ["Mary & Joseph Retreat Center","housing",33.75,-118.32,"Rancho Palos Verdes"],
+  ["Apartment Life — The Paseos at Montclair North","housing",34.09,-117.68,"4914 Olive St, Montclair — flagged discounted-rent lead (see Housing)"],
+  // Film
+  ["Laemmle Royal","film",34.05,-118.45,"West LA — premiere night Thu Feb 18, 2027 (held)"],
+  ["Lumiere Cinema","film",34.05,-118.40,"Beverly Hills area — run week Feb 19–25, 2027, booked"],
+  // Anchor jobs
+  ["TGR Foundation","anchor",33.72,-117.76,"Irvine — Sr. Director, Development (sent Nov 1)"],
+  ["Orange Catholic Foundation","anchor",33.77,-117.91,"Garden Grove — Relationship Manager (submitted Nov 1)"],
+  ["Our Lady Queen of Angels","anchor",33.62,-117.88,"Newport Beach — combined application sent Nov 1"],
+  ["Thomas Aquinas College","anchor",34.35,-119.06,"Santa Paula — Director of Annual Giving (sent Nov 1)"],
+  ["Dana Point parish role","anchor",33.47,-117.70,"Faith Formation Programs Coordinator (submitted Nov 1)"],
+  ["Archdiocese of Los Angeles","anchor",34.06,-118.32,"4311 Wilshire Blvd — Managing Director role (submitted Nov 1)"],
+  ["Inner Spark Learning Lab","anchor",33.98,-118.29,"South LA — Director of Development (submitted Nov 1)"],
+  // Training
+  ["Life Time Lakeshore","training",33.72,-117.76,"Irvine — ARORA/PT route via Edwin Sifuentes"],
+  ["OC Performance Coaches","training",33.61,-117.71,"Laguna Hills — fit call Tue Nov 3, 2:30pm PT"],
+  ["Train With Dave","training",33.79,-117.83,"Orange — evening PT, letter sent Nov 1"],
+  ["STARK","training",33.74,-117.79,"Tustin — Coach/PT (submitted Nov 1)"],
+  ["Alloy Personal Training","training",33.68,-117.83,"Irvine — PT (submitted Nov 1)"],
+  ["StretchLab","training",33.43,-117.61,"San Clemente — Flexologist PT (submitted Nov 1)"],
+  ["Special Strong","training",33.84,-117.91,"Anaheim — adaptive trainer (submitted Nov 1)"],
+  ["PLATEFIT","training",34.05,-118.47,"Brentwood — Power Plate instructor inquiry sent Nov 1"],
+  ["EōS Fitness Montclair","training",34.088,-117.69,"Montclair Place area — PT submitted Nov 2"],
+  ["24 Hour Fitness Upland","training",34.108,-117.659,"685 W Foothill Blvd, Upland — PT submitted Nov 2"],
+  ["EōS Fitness Rancho Cucamonga","training",34.154,-117.60,"Rancho Cucamonga — PT submitted Nov 2"],
+  // Martial arts
+  ["Champions Martial Arts","martial",33.99,-117.73,"Chino Hills — TKD Sparring Coach, applying"],
+  ["Impact Kids","martial",34.01,-117.69,"Chino — Martial Arts Instructor, applying"],
+  ["UFC Gym Brea","martial",33.92,-117.89,"MMA Coach, applying"],
+  ["UFC Gym City of Industry","martial",34.02,-117.96,"MMA Coach, applying"],
+  ["MiraCosta College","martial",33.19,-117.30,"Oceanside — faculty pool, DROPPED Nov 1"],
+  ["TumbleKick Studios","martial",34.14,-118.40,"Studio City — emailed Nov 1"],
+  ["Beyond Karate","martial",34.01,-118.49,"Santa Monica — emailed Nov 1"],
+  ["arc After School","martial",33.84,-118.35,"Torrance — enrichment instructor lead"]
+];
+var map = L.map("map").setView([33.95,-117.85], 9);
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "&copy; OpenStreetMap contributors" }).addTo(map);
+var bounds = [];
+PINS.forEach(function(p){
+  var m = L.circleMarker([p[2],p[3]], { radius: 7, color: "#ffffff", weight: 1.5, fillColor: COLORS[p[1]], fillOpacity: 0.9 }).addTo(map);
+  m.bindPopup("<b>" + p[0] + "</b><br>" + p[4]);
+  bounds.push([p[2],p[3]]);
+});
+map.fitBounds(bounds, { padding: [18,18] });
+</script>
+
+<script>
+/* ---------- CROS LA Prospects (CRM) ----------
+   Working data: edit these arrays to update statuses / next steps, then rebuild.
+   status starts "Not contacted" for every prospect; next starts "" (rendered as —). */
+var CRM = [
+{ app:"Verto", tag:"Small-batch clothing production — brand operating system (tech packs, suppliers, costing, storefront)", prospects:[
+ {name:"Big Bud Press", loc:"Highland Park / Eagle Rock, Los Angeles", desc:"Unisex workwear-inspired apparel in extended sizes, manufactured locally and ethically in LA.", contact:"Lacey Micallef, founder/owner (name from press coverage)", doors:[["Email","contact@bigbudpress.com","brand's own About page (press inquiries)"],["Email","jobs@bigbudpress.com","brand's own careers page"],["Phone","+1 323-642-9039","Google business listing"],["Instagram","@bigbudpress",""]], doorStatus:"Verified email", status:"Not contacted", next:""},
+ {name:"Everybody.World", loc:"Vernon", desc:"Recycled-cotton basics and fleece, all cut, sewn, and finished in LA; also a wholesale blanks program and custom studio.", contact:"", doors:[["Email","sales@everybody.world","brand's own wholesale site"],["Email","hello@everybody.world","brand's own site FAQ"],["Instagram","@everybody.world",""]], doorStatus:"Verified email", status:"Not contacted", next:""},
+ {name:"Christy Dawn", loc:"Downtown LA factory; Brentwood store", desc:"Limited-edition dresses and womenswear sewn from deadstock and regenerative/organic cotton in their own DTLA factory.", contact:"Christy Dawn Peterson & Aras Baskauskas, co-founders", doors:[["Email","shop@christydawn.com","brand's own Order Guide/contact page"],["Email","sales@christydawn.com","brand's own terms page"],["Phone","(800) 364-5969","brand's own privacy policy page"],["Instagram","@christydawn",""]], doorStatus:"Verified email", status:"Not contacted", next:""},
+ {name:"Jesse Kamm", loc:"Mount Washington, Los Angeles", desc:"Cult womenswear (sailor pants, knits, separates) manufactured and sewn in LA; the founder designs, sells, and runs production herself.", contact:"Jesse Kamm, founder/designer", doors:[["Email","studio@jessekamm.world","brand's own site footer"],["Email","sales@jessekamm.world","brand's own site footer (wholesale)"],["Email","press@jessekamm.world","brand's own site footer"],["Instagram","@jessekamm",""]], doorStatus:"Verified email", status:"Not contacted", next:""},
+ {name:"Jungmaven", loc:"Los Angeles (cut and sewn in LA)", desc:"Hemp and hemp/organic-cotton apparel — tees, fleece, pants, dresses — with an active wholesale program.", contact:"Robert Jungmann, founder", doors:[["Email","wholesale@jungmaven.com","brand's own site banner"],["Instagram","@jungmaven",""]], doorStatus:"Verified email", status:"Not contacted", next:""},
+ {name:"Selva Negra", loc:"Eagle Rock, Los Angeles", desc:"Womenswear produced ethically in DTLA; sells direct and wholesale with its own published linesheets.", contact:"Kristen Gonzalez & Sam Romero, co-founders", doors:[["Email","sales@selvanegra.us","brand's own linesheet PDFs"],["Email","info@selvanegra.us","brand's own linesheet PDFs"],["Phone","1-323-507-2142","third-party listings only — treat with caution"],["Instagram","@selvanegra_","as printed in the brand's own linesheets"]], doorStatus:"Verified email", status:"Not contacted", next:""},
+ {name:"Sugar Candy Mountain", loc:"Silver Lake / Los Feliz area, Los Angeles (90039)", desc:"Small-batch womenswear, sustainably and ethically made in LA since 2015, run by a three-woman team.", contact:"Bianca, Julia & Ashley (team named in the brand's own customer emails)", doors:[["Email","studio@sugarcandymtn.com","brand's own copy on its Garmentory storefront"],["Instagram","@sugar_candy_mountain","per the brand's own emails"]], doorStatus:"Verified email (brand-supplied, marketplace storefront)", status:"Not contacted", next:""},
+ {name:"Shaina Mote", loc:"Highland Park, Los Angeles", desc:"Timeless womenswear — all woven garments designed, developed, and made in LA with longtime local partners; sold in 70+ boutiques.", contact:"Shaina Mote, founder/designer", doors:[["Email","info@shainamote.com","brand's own About page"],["Instagram","@shainamote",""]], doorStatus:"Verified email", status:"Not contacted", next:""},
+ {name:"Mien Studios", loc:"Long Beach / Los Angeles", desc:"Women's clothing where every piece is knit, cut, sewn, and dyed in LA by small family-owned factories.", contact:"Lisa Hsieh, founder", doors:[["Email","hello@mienstudios.com","founder-supplied, published in her VoyageLA interview"],["Instagram","@mienstudios",""],["Facebook","facebook.com/mienstudios","founder's ShoutoutLA contact info"]], doorStatus:"Verified email (founder-supplied via interview)", status:"Not contacted", next:""},
+ {name:"House of Aama", loc:"Fashion District, Downtown LA", desc:"Heritage-inspired womenswear, manufactured 100% in Los Angeles with made-to-order elements; mother-daughter founded.", contact:"Rebecca Henry & Akua Shabaka, co-founders", doors:[["Email","careers@houseofaama.com","brand's own careers page"],["Email","info@houseofaama.com","brand spotlight profile"],["Instagram","@houseofaama",""]], doorStatus:"Verified email", status:"Not contacted", next:""},
+ {name:"Whimsy + Row", loc:"Mar Vista HQ; Highland Park shop", desc:"Limited-run womenswear batches from deadstock and low-impact fabrics, produced at a partner factory in DTLA; retail store plus web store.", contact:"Rachel Temko, founder (Owner/Creative Director)", doors:[["Email","info@whimsyandrow.com","brand's own site"],["Phone","(424) 500-2405","directory listing — not confirmed on own pages"],["Instagram","@whimsyandrow",""],["Facebook","facebook.com/whimsyandrow","directory listings"]], doorStatus:"Verified email — status unresolved (see note)", flag:"Verify status before any outreach: a post on the brand's own blog announces \u201cWhimsy's final chapter,\u201d yet the site remains active with current-season content.", status:"Not contacted", next:""},
+ {name:"Ozma", loc:"Frogtown / Elysian Valley, Los Angeles", desc:"Women's clothing cut and sewn within a 10-mile radius of its LA studio, in natural fibers and small runs.", contact:"", doors:[["Email","hello@ozmaofcalifornia.com","brand's own product pages"],["Phone","+1 540-421-1482","single third-party listing — low confidence, verify before use"],["Instagram","@ozma_of_california","handle appears in customer tags/mentions"]], doorStatus:"Verified email", status:"Not contacted", next:""},
+ {name:"Back Beat Co.", loc:"Downtown LA / Arts District", desc:"Low-impact California essentials (hemp, organic cotton, Tencel); founded 2016, formerly Back Beat Rags.", contact:"Isadora Alvarez, founder", doors:[["Email","heythere@backbeatrags.com","brand's own 2018–19 newsletters (legacy domain; current-domain inbox unconfirmed)"],["Facebook","facebook.com/backbeatrags","company-database profile"]], doorStatus:"Hunt incomplete — legacy email + Facebook page", flag:"The brand's current site (backbeat.co) was unreachable during research, so the current inbox could not be confirmed. Re-run the site + Facebook Contact/About check when reachable — do not record as doorless.", status:"Not contacted", next:""},
+ {name:"Botanica Workshop", loc:"Los Angeles (neighborhood not confirmed)", desc:"Ethically made lingerie and loungewear, designed and made in Los Angeles from organic/low-impact fabrics.", contact:"", doors:[["Email","hello@botanicaworkshop.com","brand's own FAQ page"]], doorStatus:"Verified email — activity signals skew older", flag:"Public activity signals skew older — confirm the brand is still producing before outreach.", status:"Not contacted", next:""},
+ {name:"Groceries Apparel", loc:"Downtown LA", desc:"Organic and recycled-material basics, 100% made in the brand's own LA production facility; also produces for other labels.", contact:"", doors:[["Email","hello@groceriesapparel.com","business directories — NOT confirmed on the brand's own site"]], doorStatus:"Email via directories only", flag:"Conflicting status signals: one aggregator flags the location \u201cpermanently closed,\u201d contradicted by a 2026 Maker's Row guide and active Nov 2026 promotions — weight of evidence says operating; verify on the brand's own site before outreach.", status:"Not contacted", next:""}
+]},
+{ app:"Culina", tag:"Shared commercial kitchens — scheduling, members, compliance, billing", prospects:[
+ {name:"Amped Kitchens", loc:"Lincoln Heights + South Los Angeles", desc:"LA County's largest multi-tenant food-production operator: 100+ pre-approved spaces across two sites, monthly leases.", contact:"Mott Smith, co-founder & CEO", doors:[["Email","leasing@ampedkitchens.com","verified — their own Los Angeles page"],["Phone","872-240-8731","leasing line, own site"],["Instagram","@ampedkitchens",""],["Facebook","facebook.com/ampedkitchens",""]], doorStatus:"Verified email", status:"Not contacted", next:""},
+ {name:"Partake Collective", loc:"Downtown Long Beach + Glassell Park", desc:"24/7 shared & commissary kitchen network — hourly stations plus daily/monthly rentals; members onboard with license/insurance uploads into their booking system.", contact:"", doors:[["Email","info@partakecollective.com","verified — published on their own site"],["Phone","(562) 317-1577","Downtown Long Beach Alliance listing"],["Instagram","@PartakeCollective",""]], doorStatus:"Verified email · rents by the hour", status:"Not contacted", next:""},
+ {name:"Crafted Kitchen", loc:"Arts District, Los Angeles", desc:"Incubator-style shared-use kitchen — \u201cco-working space for food businesses\u201d with hourly shared access, private kitchens, and licensing/compliance coaching.", contact:"Cindi Thompson, founder/owner", doors:[["Email","info@craftedkitchenla.com","verified — their own contact page"],["Phone","(213) 477-1127",""],["Instagram","@craftedkitchen",""],["Facebook","facebook.com/craftedkitchen",""]], doorStatus:"Verified email · rents by the hour", status:"Not contacted", next:""},
+ {name:"DTLA Kitchens", loc:"Boyle Heights, Los Angeles", desc:"Shared commercial kitchen; part-time/hourly/daily/monthly access with plans starting at $600/month; Health Dept pre-approved with permit support.", contact:"Yuri (first name only, from the published email)", doors:[["Email","yuri@dtlakitchens.com","verified — footer of their own site"],["Phone","(310) 461-8200",""]], doorStatus:"Verified email · rents by the hour", status:"Not contacted", next:""},
+ {name:"Maker Kitchens", loc:"Lincoln Heights, Boyle Heights, North Hollywood", desc:"Multi-site operator of private permitted kitchens rented monthly — four LA County facilities under one operator.", contact:"", doors:[["Email","info@makerkitchens.com","verified — their own homepage"],["Phone","(213) 537-4474",""]], doorStatus:"Verified email · monthly only", status:"Not contacted", next:""},
+ {name:"ŌN Kitchens", loc:"Van Nuys + South Los Angeles", desc:"Fully certified kitchens (200–600 sq ft), monthly or hourly rent, 24/7/365 access, application-based entry.", contact:"", doors:[["Email","info@onkitchens.com","verified — their own catering landing page"],["Phone","(844) 435-1255",""]], doorStatus:"Verified email · rents by the hour", status:"Not contacted", next:""},
+ {name:"Chef's Kitchens", loc:"West Los Angeles", desc:"Five cooperative shared kitchens in one building; culinary incubator established 1984; kitchens heavily booked with a waitlist.", contact:"Andrea Bell, founder/owner (older published profile)", doors:[["Email","info@chefskitchens.com","verified — their own contact page"],["Phone","(310) 837-8900",""]], doorStatus:"Verified email · hourly and monthly", status:"Not contacted", next:""},
+ {name:"The Kitchen Terminal", loc:"Redondo Beach", desc:"4,000 sq ft — 5 commercial kitchens, bake kitchen, cold prep, event room; kitchens reserved by time slot through their own app.", contact:"\u201cSunita\u201d (first name only, from a directory listing; role unverified)", doors:[["Email","info@thekitchenterminal.com","directory-sourced only (pickyourown.org) — no email on their own site"],["Email","sunita@thekitchenterminal.com","directory-sourced only (Cylex)"],["Phone","(424) 297-0409",""],["Facebook","The Kitchen Terminal & Food Truck Commissary (Redondo Beach)","page exists per Cylex"]], doorStatus:"Directory email + Facebook page · rents by the hour", status:"Not contacted", next:""},
+ {name:"Cordova Kitchens", loc:"Pico-Union, Los Angeles", desc:"12 kitchen units for lease aimed at delivery brands, meal prep, caterers, and food-truck commissary users; no long-term contracts required.", contact:"Samuel & Eli (first names and direct numbers on their own site)", doors:[["Email","info@cordovakitchens.com","verified — footer of their own site"],["Phone","818-865-8943","general line"],["Facebook","facebook.com/cordovakitchens","linked from their own site"]], doorStatus:"Verified email · lease model", status:"Not contacted", next:""},
+ {name:"The Hub Kitchens", loc:"Downtown LA (Fashion District edge)", desc:"11 kitchens (200–245 sq ft each), 24-hour access, shared walk-in cooler/freezer; tenants must hold ServSafe certification and liability insurance.", contact:"", doors:[["Email","info@hubkitchens.com","verified — their own About page"],["Phone","(323) 445-0064 / (818) 297-2361",""]], doorStatus:"Verified email · monthly only", status:"Not contacted", next:""},
+ {name:"Laurel Kitchens", loc:"Hyde Park / SoFi Stadium area, Los Angeles", desc:"Turnkey, permit-ready private kitchens for lease (long and shorter term) with shared walk-in freezer/cooler and dry storage.", contact:"", doors:[["Phone","818-887-7100","own site"],["Phone","(323) 426-2564","own site"]], doorStatus:"No email door — phone / contact form only (full hunt completed)", status:"Not contacted", next:""},
+ {name:"Banyan Tree Marketplace", loc:"Culver City", desc:"A community of small, independently-owned food businesses working out of one shared \u201cA\u201d-rated kitchen.", contact:"", doors:[["Phone","+1 323-654-6654","Google Places"]], doorStatus:"Phone only — rental model unconfirmed", flag:"Their site publishes no rental terms, so it is unconfirmed whether outside businesses can rent in. Verify the model before outreach.", status:"Not contacted", next:""}
+]},
+{ app:"ThriftOS", tag:"Thrift stores — the register, the racks, and landfill diversion reported beside the revenue", prospects:[
+ {name:"Wasteland", loc:"Melrose Ave (Fairfax District) HQ + Studio City, Highland Park, Silver Lake, San Francisco", desc:"Independent buy/sell/trade vintage clothing chain; one of LA's landmark vintage retailers across 5 locations.", contact:"Joe Swinney & Cheryl Cohen, founders (store's own \u201cWho We Are\u201d page)", doors:[["Email","help@shopwasteland.com","cityseeker directory listing; the store's own contact page is form-only"],["Phone","(323) 653-3028",""],["Instagram","@shopwasteland","~80K followers per directory sources"]], doorStatus:"Email (directory-sourced; own site form-only)", status:"Not contacted", next:""},
+ {name:"St. Vincent de Paul of Los Angeles", loc:"Lincoln Heights flagship + Long Beach", desc:"Charity thrift run by the Society of St. Vincent de Paul's LA Council; its own site calls the LA store \u201cthe largest thrift store in Los Angeles\u201d; revenue funds services for the poor and homeless.", contact:"Lori Christian (planned giving)", doors:[["Email","vincentianservices@svdpla.org","own site"],["Email","donate@svdpla.org","own site (planned giving)"],["Phone","(323) 224-6280","LA store"],["Instagram","@svdpla","named on svdpla.org"],["Facebook","@stvincentstore","named on svdpla.org"]], doorStatus:"Verified email (own site)", status:"Not contacted", next:""},
+ {name:"Out of the Closet (AIDS Healthcare Foundation)", loc:"West Hollywood, Glassell Park + ~18 stores; AHF headquartered in LA", desc:"Charity thrift chain; clothing-heavy; store revenue funds HIV services, and stores report the share of each dollar going to care.", contact:"", doors:[["Email","info@outofthecloset.org","CDC NPIN listing (\u201cMain Email Address\u201d)"],["Phone","(323) 848-9760","West Hollywood store"]], doorStatus:"Verified email (authoritative directory listing)", status:"Not contacted", next:""},
+ {name:"The Council Shop — now \u201cFore Goods\u201d (NCJW|LA)", loc:"Fairfax District flagship + 7–8 locations across LA", desc:"Charity thrift arm of the National Council of Jewish Women | Los Angeles, rebranded \u201cFore Women\u201d with retail trading as \u201cFore Goods\u201d; clothing-focused resale funding women's services.", contact:"Marjorie Gilberg, CEO (2021 directory listing — dated)", doors:[["Email","info@ncjwla.org","multiple sources"],["Phone","(323) 655-3111","thrift line"],["Instagram","@NCJWLA",""],["Facebook","@NCJWLosAngeles",""]], doorStatus:"Verified email", status:"Not contacted", next:""},
+ {name:"It's A Wrap!", loc:"Magnolia Park, Burbank + Westside store", desc:"One-of-a-kind model: sells actual wardrobe and props from film/TV productions, sourced from studio wardrobe departments; constant stock churn.", contact:"Janet Dion, owner", doors:[["Email","MOVIECLOTHES@AOL.COM","archived capture of the store's own older homepage — dated source"],["Phone","(818) 567-7366","Burbank"],["Phone","(310) 246-9727","Westside"]], doorStatus:"Email (dated source)", flag:"Re-verify the email before any use — it comes from an archived capture and the current site's contact page returned 404 in this pass.", status:"Not contacted", next:""},
+ {name:"TROVE", loc:"Westwood, Los Angeles", desc:"Independent boutique thrift + consignment (\u201cLA's #1 thrift store & boutique consignment\u201d per its own site); clothing, home goods, jewelry.", contact:"", doors:[["Instagram","@shop.trove","verified via the store's own site link"],["Phone","(424) 389-4120","own-site business listing"]], doorStatus:"IG only (verified)", flag:"Directory listings display a trove.la email but it was masked in every readable source — not recorded unverified.", status:"Not contacted", next:""},
+ {name:"Squaresville", loc:"Los Feliz, Los Angeles", desc:"Independent buy/sell/trade vintage clothing store, open since 1996; a Los Feliz fixture.", contact:"Reiko Roberts, owner", doors:[["Instagram","@SquaresVilleVintage","per Costume Designer magazine"],["Phone","(323) 669-8464",""]], doorStatus:"IG only", status:"Not contacted", next:""},
+ {name:"Sunday's Best Thrift Apparel", loc:"Echo Park, Los Angeles (possible second store in Maywood — same-operator status unconfirmed)", desc:"Family-owned \u201cmom and pop\u201d vintage + thrift apparel shop, est. 2012; men's and women's thrift and deadstock vintage, restocked weekly.", contact:"Denisse Rodarte, owner", doors:[["Instagram","@sundaysbestthrift","per Echo Park Podcast"],["Phone","(213) 986-5695","Echo Park"]], doorStatus:"IG only", status:"Not contacted", next:""},
+ {name:"Public Estrellas", loc:"Lincoln Heights, Los Angeles", desc:"Independent thrift store opened 2023; everything $15 and under; donation drop-off with in-store credit; community-hub positioning.", contact:"Christopher Aram Ohanian, founder/owner", doors:[["Instagram","@publicestrellas","VoyageLA / Secret Los Angeles"],["Facebook","facebook.com/profile.php?id=100092212617799","per VoyageLA contact info"],["Phone","(323) 352-8906",""]], doorStatus:"IG only (plus FB page)", status:"Not contacted", next:""},
+ {name:"Chance Vintage", loc:"Magnolia Park, Burbank", desc:"Locally owned sustainable vintage clothing store — curated and reworked garments, upcycled pieces; its web presence is its Instagram.", contact:"", doors:[["Instagram","@chancevintage","the store's listed \u201cwebsite\u201d in Google data"],["Phone","(310) 498-7412",""]], doorStatus:"IG only", status:"Not contacted", next:""},
+ {name:"Bridge Thrift", loc:"Glassell Park + Highland Park, Los Angeles", desc:"Small local thrift chain (formerly L.A. Road Thrift) — clothing, furniture, housewares; staffed donation center behind the Glassell Park store.", contact:"", doors:[["Instagram","@bridgethriftglassellpark","per LA thrift guide"],["Phone","(323) 739-6478","Glassell Park"],["Phone","(323) 474-6424","Highland Park"]], doorStatus:"IG only (plus published phones)", status:"Not contacted", next:""},
+ {name:"Jet Rag", loc:"Mid-City / La Brea, Los Angeles", desc:"Independent vintage clothing landmark — massive multi-level used-clothing inventory; famous $1 Sunday parking-lot sale.", contact:"", doors:[["Facebook","facebook.com/JetRagClothing","Google lists the FB page as the store's website"],["Phone","(323) 939-0528",""]], doorStatus:"No email or IG door found after full hunt — Facebook + phone", flag:"Reputation flag from the research notes: recent Google reviews include multiple allegations of discriminatory bag-check enforcement — noted for awareness before any approach.", status:"Not contacted", next:""},
+ {name:"Full Circle Thrift", loc:"Altadena", desc:"Nonprofit community thrift started 2016 by the Pacific Southwest Mennonite Conference; proceeds fund peace and justice work; reopened after the Eaton Fire. Its web home is its Facebook page.", contact:"Paul N., Business Manager", doors:[["Facebook","facebook.com/FullCircleThrift","its listed website across Google/Yelp/directories"],["Phone","(626) 639-3051",""],["Instagram","@fullcirclethrift","listed by LA Vintage Map — not independently verified"]], doorStatus:"No email found after full hunt — Facebook + phone", status:"Not contacted", next:""},
+ {name:"Dream King Community Store", loc:"Crenshaw District, Los Angeles", desc:"Resale thrift store run by the Dream King Forward Foundation, a 501(c)(3) providing jobs, entrepreneurial and mentor-leadership training; limited hours (Fri–Sat). Smallest operation on this list — a later-stage prospect.", contact:"", doors:[["Phone","(626) 298-1938","published phone only"]], doorStatus:"No door found after full hunt — phone only", status:"Not contacted", next:""}
+]},
+{ app:"Resurrectio", tag:"Reentry after incarceration — walking with returning citizens from release to flourishing", prospects:[
+ {name:"Homeboy Industries", loc:"Chinatown / Downtown Los Angeles", desc:"The world's largest gang-intervention and reentry program — 18-month paid job training across social enterprises, with every trainee paired with a Navigator and a Case Manager.", contact:"Co-CEOs Shirley Torres & Steve Delgado; founder Fr. Gregory Boyle, S.J.", doors:[["Email","info@homeboyindustries.org","verbatim from their own Contact page"],["Phone","(323) 526-1254","own Contact page"],["Instagram","@homeboyindustries",""],["Facebook","facebook.com/HomeboyIndustries",""]], doorStatus:"Verified email", status:"Not contacted", next:""},
+ {name:"Anti-Recidivism Coalition (ARC)", loc:"Arts District / Downtown Los Angeles (+ Sacramento office)", desc:"Membership network of formerly incarcerated people — reentry support, housing referrals, the Hope and Redemption Team in 33 CA prisons, Credible Messengers youth mentoring.", contact:"Sam Lewis served as ED/CEO from 2019; a 2025 leadership transition was reported and no successor is publicly confirmed", doors:[["Email","blear@arc-ca.org","Ben Lear, Director of Communications — LA Giving directory listing; no general inbox found on ARC's own site"],["Phone","213-955-5885","same directory listing"],["Instagram","@antirecidivismcoalition",""],["Facebook","facebook.com/antirecidivismcoalition",""]], doorStatus:"Verified email (staff-level, via directory)", flag:"Verify ED succession before outreach — Sam Lewis's reported 2025 departure has no publicly confirmed successor.", status:"Not contacted", next:""},
+ {name:"Chrysalis", loc:"Downtown LA / Skid Row (+ Santa Monica, Pacoima)", desc:"Employment-focused nonprofit — job-readiness, one-on-one employment specialists, and paid transitional employment through its social enterprises.", contact:"Mark Loranger, President & CEO", doors:[["Email","CS@changelives.org","client services email in the CA reentry employment directory (OACRA) listing"],["Phone","(213) 394-2390","client services, same listing"],["Instagram","@ChrysalisSoCal",""],["Facebook","facebook.com/ChrysalisSoCal",""]], doorStatus:"Verified email (directory)", status:"Not contacted", next:""},
+ {name:"A New Way of Life Reentry Project (ANWOL)", loc:"South Los Angeles / Watts", desc:"Grassroots reentry housing for formerly incarcerated women — 10 SAFE homes with family reunification, workforce development, legal clinics, and healing support; founded 1998.", contact:"Susan Burton, Founder & Executive Director", doors:[["Email","claire@anewwayoflife.org","Claire S. Arcé, press/org contact in ANWOL's own press releases"],["Phone","(323) 563-3575",""],["Instagram","@anewwayoflifereentryproject",""],["Facebook","facebook.com/ANewWayofLifeReentryProject",""]], doorStatus:"Verified email", status:"Not contacted", next:""},
+ {name:"Center for Employment Opportunities (CEO) — Los Angeles", loc:"Downtown Los Angeles (national HQ New York)", desc:"Employment services exclusively for people recently released — transitional work crews, job coaching, placement, retention; administers California's HIRE program with milestone-based cash assistance.", contact:"LA site leadership not publicly listed", doors:[["Email","info@ceoworks.org","verbatim from their own website footer (national inbox)"],["Phone","212-422-4430","national HQ, own site; no LA direct line published"]], doorStatus:"Verified email (national inbox)", status:"Not contacted", next:""},
+ {name:"Amity Foundation", loc:"South Los Angeles (HQ Tucson, AZ; large LA County operations)", desc:"Therapeutic-community pioneer — residential and outpatient reentry and substance-use treatment; also LA County's third-party administrator for CFCI reentry grants.", contact:"Doug Bond, President & CEO", doors:[["Email","tpagrants@amityfdn.org","published on their own site (CFCI grants contact)"],["Email","info@amityfdn.org","contact databases (Growjo)"],["Phone","213-743-9076","LA office, from their own letterhead"],["Instagram","@amityfdn",""]], doorStatus:"Verified email", status:"Not contacted", next:""},
+ {name:"The Francisco Homes", loc:"South Los Angeles", desc:"Faith-based (Jesuit-rooted) transitional housing and holistic support for men returning after life sentences — long-term accompaniment since 2008.", contact:"Current executive director not published", doors:[["Email","info@thefranciscohomes.org","verbatim from their own website footer"],["Phone","(323) 293-1111","own site"]], doorStatus:"Verified email (no social door found)", status:"Not contacted", next:""},
+ {name:"Five Keys Schools and Programs", loc:"San Gabriel (LA main office) + LA sites", desc:"First charter school in the nation inside a county jail; in LA runs in-custody education plus community reentry — transitional employment, case management, co-located services.", contact:"Steve Good, Executive Director/CEO; Dave Bates, Senior Director of Reentry & Transitional Employment (LA-facing)", doors:[["Email","steveg@fivekeys.org","ED — from Five Keys' own LCAP filing"],["Email","daveb@fivekeys.org","published by 1degree.org for LA reentry services"],["Email","info@fivekeyscharter.org","general — reentry-student directories"],["Phone","626-703-4270","LA main office"]], doorStatus:"Verified email (named ED + named LA reentry director)", status:"Not contacted", next:""},
+ {name:"Friends Outside in Los Angeles County (FOLA)", loc:"Pasadena (+ Inglewood site)", desc:"Since 1972 — case management, reentry employment support, the Dads Back! Academy for reentry fathers, and family visitation support.", contact:"Mary Weaver, Executive Director", doors:[["Email","mweaver@friendsoutsidela.org","the ED's own address, published on FOLA's own site"],["Email","info@friendsoutsidela.org","own site footer / 211LA"],["Phone","(626) 795-7607",""]], doorStatus:"Verified email (ED-direct)", status:"Not contacted", next:""},
+ {name:"Defy Ventures — Southern California", loc:"Koreatown / Mid-Wilshire, Los Angeles (national HQ New York)", desc:"Entrepreneurship and workforce programs for currently and formerly incarcerated people — in-prison \u201cCEO of Your New Life,\u201d post-release career program, and an accelerator with executive mentoring.", contact:"Andrew Glazier, President & CEO (LA-based); Ivy Panlilio, VP California", doors:[["Email","info@defyventures.org","published in Defy's own program/enrollment releases"],["Email","mariah@defyventures.org","LA contact (Mariah Dickinson, VP Site Operations) — federal MBDA grantee listing"],["Phone","213-221-1163","LA, MBDA listing"]], doorStatus:"Verified email", status:"Not contacted", next:""},
+ {name:"Project Rebound — Cal State LA", loc:"El Sereno / East Los Angeles", desc:"Campus support program for formerly incarcerated students — admissions and financial-aid advisement, parole/probation advocacy, mentoring, career readiness.", contact:"Dr. Giraldo, Director of Project Rebound", doors:[["Phone","(323) 343-5230","program's own services page"]], doorStatus:"Form/phone only — no published program email found (all four checks run)", status:"Not contacted", next:""}
+]}
+];
+
+/* ---------- Render CRM ---------- */
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+var crmEl = document.getElementById("crm");
+CRM.forEach(function(group){
+  var d = document.createElement("details");
+  d.className = "group"; d.open = true;
+  var html = "<summary>" + esc(group.app) + " <span class=\"n\">(" + group.prospects.length + ") — " + esc(group.tag) + "</span></summary><div class=\"rows\">";
+  group.prospects.forEach(function(p){
+    html += "<div class=\"prospect\"><div class=\"t\">" + esc(p.name) + " <span class=\"loc\">· " + esc(p.loc) + "</span></div>";
+    html += "<div class=\"desc\">" + esc(p.desc) + "</div>";
+    if (p.contact) html += "<div class=\"door\"><b>Contact:</b> " + esc(p.contact) + "</div>";
+    p.doors.forEach(function(door){
+      html += "<div class=\"door\"><b>" + esc(door[0]) + ":</b> " + esc(door[1]) + (door[2] ? " <span class=\"src\">(" + esc(door[2]) + ")</span>" : "") + "</div>";
+    });
+    html += "<div class=\"door\"><b>Door status:</b> " + esc(p.doorStatus) + "</div>";
+    if (p.flag) html += "<div class=\"flag-note\">⚠ " + esc(p.flag) + "</div>";
+    html += "<div class=\"crm\"><span><b>Status:</b> <span class=\"pill\">" + esc(p.status) + "</span></span><span><b>Next step:</b> " + (p.next ? esc(p.next) : "—") + "</span></div>";
+    html += "</div>";
+  });
+  html += "</div>";
+  d.innerHTML = html;
+  crmEl.appendChild(d);
+});
+</script>
+</body>
+</html>
