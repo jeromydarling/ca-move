@@ -74,7 +74,7 @@
       <div class="count"><b>65</b><span>Applications tracked</span></div>
       <div class="count"><b>7</b><span>Housing leads</span></div>
       <div class="count"><b>72</b><span>CROS LA prospects</span></div>
-      <div class="count"><b>43</b><span>Map pins</span></div>
+      <div class="count"><b>51</b><span>Map pins</span></div>
     </div>
   </div>
 </header>
@@ -86,7 +86,7 @@
 </section>
 
 <section>
-  <h2>Map <span class="sub">— jobs, housing, and the film</span></h2>
+  <h2>Map <span class="sub">— jobs, housing, the film, and the kids</span></h2>
   <div id="map"></div>
   <div class="legend">
     <span><i style="background:#7b5ea7"></i>Housing</span>
@@ -94,6 +94,7 @@
     <span><i style="background:#2e7d32"></i>Anchor jobs</span>
     <span><i style="background:#e07b26"></i>Training &amp; fitness</span>
     <span><i style="background:#0f766e"></i>Martial arts</span>
+    <span><i style="background:#2563eb"></i>Kids &amp; family</span>
   </div>
 </section>
 
@@ -307,6 +308,21 @@
 </section>
 
 <section>
+  <h2>Kids in LA <span class="sub">— community, camps &amp; Wyatt's work (researched Nov 22, 2026)</span></h2>
+  <p>The kids stay anchored in Minnesota and fly in roughly monthly, so everything here is weighted toward what a visiting kid can actually walk into: weekly youth nights, park days, and single-day events. Corridor verdict: <b>Long Beach has the deepest verified teen infrastructure</b>; the SGV works if aimed at Monterey Park / West Covina / Pomona (El Monte itself is thin); the Westside has the biggest parishes but the least published drop-in teen programming.</p>
+  <div class="grid two">
+    <div class="card"><div class="t">St. Cornelius — Long Beach (Life Teen + Edge)</div><p>Weekly rhythm: Life Teen Sundays plus weekday youth nights (6:30–8:00pm, Large Hall), with lanes for the 17- and 14-year-old and Edge for the younger two. Named door: Alexis Hull, Confirmation &amp; Youth Ministry — youthministry@stcorneliuslb.org, (562) 420-7613. Active youth-ministry Instagram. <b>Strongest plug-in door found.</b></p></div>
+    <div class="card"><div class="t">St. Thomas Aquinas — Monterey Park (SGV door)</div><p>Weekly Wednesday 6:30pm high-school youth nights, about 25 teens. The door if the landing is El Monte side. Also in the SGV: St. Christopher, West Covina — Life Teen Wednesdays 6:30–8:30pm, roughly twice a month.</p></div>
+    <div class="card"><div class="t">NOCCHE — Catholic homeschool community, Fullerton</div><p>Friday park days, a Monday co-op at St. Mary's (preschool through high school), monthly teen meet-ups, dances, graduations. About 135 families and active now; join the groups.io list before landing. <b>Best family-wide door — all four kids get a social world, not just the teens.</b> Also: Long Beach Catholic Homeschool Group (First Friday park days) and the Southern California Catholic Home Educators umbrella (prom, graduation, conference).</p></div>
+    <div class="card"><div class="t">Westside — St. Paul the Apostle + St. Monica</div><p>St. Paul the Apostle (Westwood, Paulist) runs Cross+Trainers, a Thursday-evening teen team — the clearest weekly Westside door. St. Monica (Santa Monica) is the biggest community but publishes no drop-in teen night; one email to Diane Gasper (faith formation) opens it.</p></div>
+    <div class="card"><div class="t">Anchor events</div><p><b>OneLife LA — Sat Jan 23, 2027</b>, Cathedral of Our Lady of the Angels: the whole family, the month of the landing. <b>RECongress Youth Day — Thu Apr 22, 2027</b>, Anaheim Convention Center: high-school AND middle-school tracks, $45 before Mar 1, registration open. Life Teen Inspiration at Six Flags Magic Mountain returns in 2027 (date not yet posted; a go-with-a-parish-group event).</p></div>
+    <div class="card"><div class="t">Wilder's Creature Path</div><p>No year-round LA creature/prosthetics school takes a 14-year-old (the pro programs gate at 18), so his path is a stack: Stan Winston School of Character Arts online for weekly technique; Cinema Makeup School summer boot camps (ages 13–17) for in-person prosthetics lab weeks; Otis Summer of Art (ages 14.5+) and ArtCenter ACX Teens for design foundations; Bob Baker Marionette Theater and the LA Guild of Puppetry for puppetry community. Full guide: the <i>Wilder's Creature Path</i> artifact.</p></div>
+    <div class="card"><div class="t">Wyatt — work at 17</div><p>The remote-job market at 17 is essentially closed (nearly every platform and employer is 18+). Two real lanes: <b>(1) CROS LLC employment</b> — Minnesota needs no work permit and sets no hour caps at 17; paid hours logged from Minnesota only (California's minor work-permit regime is the trap); whether the family FICA exemption applies turns on CROS's entity structure — a CPA question. <b>(2) Fiverr</b> under a parent-owned account — platform-sanctioned for ages 13–17 (editing, social, web gigs; account transfers to him at 18).</p></div>
+  </div>
+  <p class="muted">Full research: kids-community-and-wyatt-work-nov22.md in the move folder. Nothing contacted yet — the first doors get knocked on once the housing corridor settles.</p>
+</section>
+
+<section>
   <h2>CROS LA Prospects <span class="sub">— CRM</span></h2>
   <p>Prospects for four CROS federation apps, researched Nov 2, 2026. Research only — nobody has been contacted yet. Each prospect's door was hunted in order: the organization's own website (read fully), its Facebook About/Contact info, its Instagram, then Google. The door source is noted on every entry. A fifth stream — Saltatio for dance studios — was researched Nov 8, 2026 and is summarized below the CRM; its 20-studio pool is held until the dance fork is built.</p>
   <div class="progress-strip">
@@ -333,7 +349,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 /* ---------- Map ---------- */
-var COLORS = { housing:"#7b5ea7", film:"#c0392b", anchor:"#2e7d32", training:"#e07b26", martial:"#0f766e" };
+var COLORS = { housing:"#7b5ea7", film:"#c0392b", anchor:"#2e7d32", training:"#e07b26", martial:"#0f766e", kids:"#2563eb" };
 var PINS = [
   // Housing
   ["Prince of Peace Abbey","housing",33.19,-117.38,"Benedictine guest house, Oceanside — $30/night incl. meals; retreat/prayer only, NOT a January base"],
@@ -385,6 +401,13 @@ var PINS = [
   ["TumbleKick Studios","martial",34.14,-118.40,"Studio City — emailed Nov 1"],
   ["Beyond Karate","martial",34.01,-118.49,"Santa Monica — emailed Nov 1"],
   ["arc After School","martial",33.84,-118.35,"Torrance — enrichment instructor lead"]
+  // Kids & family
+  ["St. Cornelius","kids",33.83,-118.13,"Long Beach — Life Teen + Edge; strongest plug-in youth door (Alexis Hull, youthministry@stcorneliuslb.org)"],
+  ["St. Thomas Aquinas","kids",34.04,-118.13,"Monterey Park — weekly Wed 6:30pm high-school youth nights, ~25 teens (SGV door)"],
+  ["NOCCHE — St. Mary's Fullerton","kids",33.87,-117.92,"Catholic homeschool community — Friday park days, monthly teen meet-ups, Monday co-op"],
+  ["St. Paul the Apostle","kids",34.06,-118.44,"Westwood — Cross+Trainers, Thursday-evening teen team (Westside door)"],
+  ["Anaheim Convention Center","kids",33.80,-117.92,"RECongress Youth Day — Thu Apr 22, 2027 (high-school + middle-school tracks)"],
+  ["Cinema Makeup School","kids",34.18,-118.34,"Burbank — summer boot camps ages 13-17; Wilder's creature/prosthetics path"],
 ];
 var map = L.map("map").setView([33.95,-117.85], 9);
 L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "&copy; OpenStreetMap contributors" }).addTo(map);
