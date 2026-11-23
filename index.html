@@ -74,7 +74,7 @@
       <div class="count"><b>66</b><span>Applications tracked</span></div>
       <div class="count"><b>7</b><span>Housing leads</span></div>
       <div class="count"><b>72</b><span>CROS LA prospects</span></div>
-      <div class="count"><b>51</b><span>Map pins</span></div>
+      <div class="count"><b>58</b><span>Map pins</span></div>
     </div>
   </div>
 </header>
@@ -86,7 +86,7 @@
 </section>
 
 <section>
-  <h2>Map <span class="sub">— jobs, housing, the film, and the kids</span></h2>
+  <h2>Map <span class="sub">— jobs, housing, the film, the kids, and parishes</span></h2>
   <div id="map"></div>
   <div class="legend">
     <span><i style="background:#7b5ea7"></i>Housing</span>
@@ -95,6 +95,7 @@
     <span><i style="background:#e07b26"></i>Training &amp; fitness</span>
     <span><i style="background:#0f766e"></i>Martial arts</span>
     <span><i style="background:#2563eb"></i>Kids &amp; family</span>
+    <span><i style="background:#b8860b"></i>Parishes</span>
   </div>
 </section>
 
@@ -324,6 +325,22 @@
 </section>
 
 <section>
+  <h2>Parishes <span class="sub">— where to attend Mass (researched Nov 22, 2026)</span></h2>
+  <p>Chosen for beauty and sacred music, not outreach — these are for his own Sundays. If the landing is Long Beach, the strongest traditional parish in the area is already there. If it is El Monte side, the SGV pair covers him. The LA landmarks are pilgrimage Sundays.</p>
+  <div class="grid two">
+    <div class="card"><div class="t">Holy Innocents — Long Beach (the lead)</div><p>425 E 20th St. Historic 1923 parish: ad orientem Masses, communion rails, <b>Traditional Latin Mass Sundays 9:00am</b>, English 11:00am, Latin Mass on weekday evenings, Carmelite Sisters staffing the school. Revered locally for traditional liturgy. <b>The likely home parish if he lands in Long Beach.</b></p></div>
+    <div class="card"><div class="t">St. Maria Goretti — Long Beach</div><p>3954 Palo Verde Ave (east Long Beach). Pastor Fr. John Schiavone is a priest the sacred-music world associates with exceptional parish music programs (he came from St. Gregory the Great, Whittier). Worth one of the first Sundays, to hear the program in person.</p></div>
+    <div class="card"><div class="t">St. Vincent de Paul — Los Angeles (beauty pick)</div><p>621 W Adams Blvd, by USC. 1920s Spanish Baroque: a 45-foot dome, ornate bell tower, and a gold reredos rising around the tabernacle. Routinely named among the most beautiful churches in California. About 35 minutes from Long Beach.</p></div>
+    <div class="card"><div class="t">St. Charles Borromeo — North Hollywood (music pick)</div><p>The choir Paul Salamunovich built there over 60 years was one of Southern California's finest — chant and polyphony, the only American choir invited to sing for John Paul II at the Vatican. The Salamunovich era ended in 2009 and regulars say it has changed; judge in person. About an hour from Long Beach.</p></div>
+    <div class="card"><div class="t">St. Vitus — Northridge (FSSP)</div><p>9710 White Oak Ave. Traditional Latin Mass seven days a week; sung High Masses Sundays at 9:00 and 11:00. Also the parish tied to the Troops of St. George chapter in the Kids section. Far from Long Beach; closer on a Westside base.</p></div>
+    <div class="card"><div class="t">St. Andrew — Pasadena (SGV beauty pick)</div><p>311 N Raymond Ave. Exterior modeled on Rome's Santa Maria in Cosmedin, interior on the Basilica of Santa Sabina, with Carlo Wostry murals and marble columns. The beautiful Sunday if the base is El Monte side.</p></div>
+    <div class="card"><div class="t">St. Thérèse — Alhambra (Carmelite)</div><p>510 N El Molino St. Sung Latin Mass Sundays at 1:00pm, about ten minutes from El Monte. The traditional option on the SGV side.</p></div>
+    <div class="card"><div class="t">First Sundays — suggested order</div><p>Long Beach base: (1) Holy Innocents, (2) St. Maria Goretti, (3) a pilgrimage Sunday to St. Vincent de Paul or St. Charles Borromeo. El Monte base: St. Andrew and St. Thérèse alternate. St. Cornelius (Kids section) remains the family plug-in when the kids are in town; these parishes are for his own Mass.</p></div>
+  </div>
+  <p class="muted">Researched Nov 22, 2026 from parish and directory sources. Mass times as published then; re-verify before the first drive.</p>
+</section>
+
+<section>
   <h2>CROS LA Prospects <span class="sub">— CRM</span></h2>
   <p>Prospects for four CROS federation apps, researched Nov 2, 2026. Research only — nobody has been contacted yet. Each prospect's door was hunted in order: the organization's own website (read fully), its Facebook About/Contact info, its Instagram, then Google. The door source is noted on every entry. A fifth stream — Saltatio for dance studios — was researched Nov 8, 2026 and is summarized below the CRM; its 20-studio pool is held until the dance fork is built.</p>
   <div class="progress-strip">
@@ -350,7 +367,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 /* ---------- Map ---------- */
-var COLORS = { housing:"#7b5ea7", film:"#c0392b", anchor:"#2e7d32", training:"#e07b26", martial:"#0f766e", kids:"#2563eb" };
+var COLORS = { housing:"#7b5ea7", film:"#c0392b", anchor:"#2e7d32", training:"#e07b26", martial:"#0f766e", kids:"#2563eb", parish:"#b8860b" };
 var PINS = [
   // Housing
   ["Prince of Peace Abbey","housing",33.19,-117.38,"Benedictine guest house, Oceanside — $30/night incl. meals; retreat/prayer only, NOT a January base"],
@@ -409,6 +426,14 @@ var PINS = [
   ["St. Paul the Apostle","kids",34.06,-118.44,"Westwood — Cross+Trainers, Thursday-evening teen team (Westside door)"],
   ["Anaheim Convention Center","kids",33.80,-117.92,"RECongress Youth Day — Thu Apr 22, 2027 (high-school + middle-school tracks)"],
   ["Cinema Makeup School","kids",34.18,-118.34,"Burbank — summer boot camps ages 13-17; Wilder's creature/prosthetics path"],
+  // Parishes
+  ["Holy Innocents","parish",33.79,-118.19,"Long Beach — Traditional Latin Mass Sun 9am, English 11am, ad orientem; the likely home parish if Long Beach"],
+  ["St. Maria Goretti","parish",33.83,-118.11,"Long Beach — Fr. John Schiavone, known for exceptional sacred music programs"],
+  ["St. Vincent de Paul","parish",34.03,-118.28,"Los Angeles — 1920s Spanish Baroque jewel; dome and gold reredos (beauty pick)"],
+  ["St. Charles Borromeo","parish",34.15,-118.38,"North Hollywood — the Salamunovich choir legacy; chant and polyphony"],
+  ["St. Vitus (FSSP)","parish",34.24,-118.52,"Northridge — Traditional Latin Mass 7 days a week; sung High Masses Sun 9am and 11am"],
+  ["St. Andrew","parish",34.15,-118.15,"Pasadena — replica of Santa Sabina and Santa Maria in Cosmedin; Wostry murals (SGV beauty pick)"],
+  ["St. Therese","parish",34.10,-118.13,"Alhambra (Carmelite) — sung Latin Mass Sundays 1pm; ten minutes from El Monte"],
 ];
 var map = L.map("map").setView([33.95,-117.85], 9);
 L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "&copy; OpenStreetMap contributors" }).addTo(map);
